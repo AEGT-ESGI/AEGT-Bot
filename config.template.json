@@ -1,0 +1,12 @@
+{
+    "BOT": {
+        "NAME": "",
+        "VERSION": "1.0"
+    },
+    "CHANNELS": {
+        "TICKETS": false
+    },
+    "CATEGORY": {
+        "TICKETS": false
+    }
+}
