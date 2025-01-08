@@ -1,26 +1,47 @@
+import json
+import os
+
 import nextcord as nc
-from nextcord.ext import commands
-from os import listdir, getenv
 from dotenv import load_dotenv
+from nextcord.ext import commands
 
-load_dotenv()
 
-bot = commands.Bot(intents=nc.Intents.all())
+class Bot:
+    def __init__(self, config_file_path: str = "config.json"):
+        load_dotenv()
 
-@bot.event
-async def on_ready():
-    print("Bot is connected.")
+        self.update_config()
 
-cogs = []
+        self.bot = commands.Bot(intents=nc.Intents.all())
 
-for C in listdir("cogs/commands"):
-    if C.endswith(".py"):
-        cogs.append("cogs.commands."+C[:-3])
+        self.cogs = []
 
-for C in listdir("cogs/events"):
-    if C.endswith(".py"):
-        cogs.append("cogs.events."+C[:-3])
+    def update_config(self):
+        if not os.path.exists("config.json"):
+            raise FileNotFoundError("Configuration file not found.")
+        with open("config.json", encoding="utf-8") as config_file:
+            self.config = json.load(config_file)
 
-bot.load_extensions(cogs)
+    def load_commands(self):
+        for command in os.listdir("cogs/commands"):
+            if command.endswith(".py"):
+                self.cogs.append("cogs.commands." + command[:-3])
 
-bot.run(getenv("TOKEN"))
+    def load_events(self):
+        for event in os.listdir("cogs/events"):
+            if event.endswith(".py"):
+                self.cogs.append("cogs.events." + event[:-3])
+
+    def load(self):
+        self.load_events()
+        self.load_commands()
+        self.bot.load_extensions(self.cogs)
+
+    def run(self):
+        self.bot.run(os.getenv("TOKEN"))
+
+
+if __name__ == "__main__":
+    bot = Bot()
+    bot.load()
+    bot.run()
