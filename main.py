@@ -7,8 +7,9 @@ from nextcord.ext import commands
 
 
 class Bot:
-    def __init__(self, config_file_path: str = "config.json"):
+    def __init__(self):
         load_dotenv()
+        self.bot_token = os.getenv("TOKEN")
 
         self.update_config()
 
@@ -38,7 +39,7 @@ class Bot:
         self.bot.load_extensions(self.cogs)
 
     def run(self):
-        self.bot.run(os.getenv("TOKEN"))
+        self.bot.run(self.bot_token)
 
 
 if __name__ == "__main__":
