@@ -1,12 +1,11 @@
 {
-    "BOT": {
-        "NAME": "",
-        "VERSION": "1.0"
-    },
-    "CHANNELS": {
-        "TICKETS": false
-    },
-    "CATEGORY": {
-        "TICKETS": false
-    }
+  "BOT": {
+    "NAME": "",
+    "VERSION": "1.0"
+  },
+  "TICKETS": {
+    "CHANNEL_ID": 0,
+    "CATEGORY_ID": 0,
+    "ROLE_ID": 0
+  }
 }
