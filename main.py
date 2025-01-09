@@ -5,6 +5,8 @@ import nextcord as nc
 from dotenv import load_dotenv
 from nextcord.ext import commands
 
+import config
+
 
 class Bot:
     def __init__(self):
@@ -18,10 +20,8 @@ class Bot:
         self.cogs = []
 
     def update_config(self):
-        if not os.path.exists("config.json"):
-            raise FileNotFoundError("Configuration file not found.")
-        with open("config.json", encoding="utf-8") as config_file:
-            self.config = json.load(config_file)
+        config_instance = config.Config()
+        self.config = config_instance.get_config()
 
     def load_commands(self):
         for command in os.listdir("cogs/commands"):
