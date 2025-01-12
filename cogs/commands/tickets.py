@@ -2,6 +2,7 @@ import nextcord as nc
 from nextcord.ext import commands
 from nextcord.ui import Button, View
 from time import sleep
+from config import TicketConfig as tc
 
 
 class TicketUtils:
@@ -36,8 +37,8 @@ class TicketUtils:
 
     @staticmethod
     async def setup_new_ticket_system(interaction: nc.Interaction, ticket_category: nc.CategoryChannel):
-        set_value("TICKET_CHANNEL_ID", interaction.channel.id)
-        set_value("TICKET_CATEGORY_ID", ticket_category.id)
+        tc.set_ticket_channel(interaction.channel.id)
+        tc.set_ticket_category(ticket_category.id)
 
         await interaction.send(
                 "Le système de tickets a été superbement configuré ! <:yay:1274376322847739935>"
@@ -51,8 +52,8 @@ class TicketUtils:
     @staticmethod
     async def allow_ticket_creation(interaction: nc.Interaction, ticket_category: nc.CategoryChannel):
         if interaction.data["custom_id"] == "delete_ticket":
-            set_value("TICKET_CHANNEL_ID", interaction.channel.id)
-            set_value("TICKET_CATEGORY_ID", ticket_category.id)
+            tc.set_ticket_channel(interaction.channel.id)
+            tc.set_ticket_category(ticket_category.id)
 
             await interaction.message.edit(
                     "Le système de tickets a été superbement configuré ! <:yay:1274376322847739935>",
@@ -111,7 +112,7 @@ class ManageTicketCommand(commands.Cog):
                     )
             return
 
-        if get_value("TICKET_CHANNEL_ID"):
+        if tc.get_ticket_channel():
             await TicketUtils.handle_existing_ticket_system(interaction, ticket_category)
         else:
             await TicketUtils.setup_new_ticket_system(interaction, ticket_category)

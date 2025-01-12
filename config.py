@@ -62,18 +62,36 @@ class TicketConfig:
     def _update_ticket_config(self) -> None:
         self.config.set_config(self.TICKET_CONFIG_KEY, self.ticket_config)
 
-    def get_ticket_config(self) -> Dict:
+    def get_ticket_channel(self) -> int:
         """
-        Returns the ticket configuration as a dictionary.
+        Returns the ID channel where ticket system was set up.
 
         Returns:
-            Dict: The ticket configuration as a dictionary.
+            Int: The ID channel where ticket system was set up.
         """
-        return self._load_ticket_config()
+        return self._load_ticket_config()[self.TICKET_CONFIG_CHANNEL_ID_KEY]
+    
+    def get_ticket_category(self) -> int:
+        """
+        Returns the ID category where tickets will be created.
+
+        Returns:
+            Int: The ID category where tickets will be created.
+        """
+        return self._load_ticket_config()[self.TICKET_CONFIG_CATEGORY_ID_KEY]
+    
+    def get_ticket_role(self) -> int:
+        """
+        Returns the ID ticket role which is added to ticket channel for support.
+
+        Returns:
+            Int: The ID ticket role which is added to ticket channel for support.
+        """
+        return self._load_ticket_config()[self.TICKET_CONFIG_ROLE_ID_KEY]
 
     def set_ticket_channel(self, channel_id: int) -> None:
         """
-        Sets the ID for the channel where tickets will be created.
+        Sets the ID for the channel where system ticket will be set up.
         Args:
             channel_id (int): The ID of the channel
         """
@@ -92,7 +110,7 @@ class TicketConfig:
 
     def set_ticket_role(self, role_id: int) -> None:
         """
-        Sets the ID for the role that will be added to the ticket creator.
+        Sets the ID for the role that will be added to the ticket channel for support.
         Args:
             role_id (int): The ID of the role
         """
