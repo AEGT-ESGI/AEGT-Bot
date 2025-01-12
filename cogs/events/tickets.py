@@ -19,7 +19,7 @@ class TicketEventUtils:
                 topic=str(interaction.user.id),
                 overwrites={
                     interaction.guild.default_role: nc.PermissionOverwrite(read_messages=False),
-                    interaction.guild.get_role(get_value("STAFF_ROLE_ID")): nc.PermissionOverwrite(read_messages=True),
+                    interaction.guild.get_role(tc.get_ticket_role()): nc.PermissionOverwrite(read_messages=True),
                     interaction.user: nc.PermissionOverwrite(read_messages=True)
                     }
                 )
