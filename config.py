@@ -20,6 +20,10 @@ class Config:
         with open("config.json", encoding="utf-8") as config_file:
             self.config = json.loads(config_file.read())
             return self.config
+        
+    def _update_config(self) -> None:
+        with open("config.json", "w", encoding="utf-8") as config_file:
+            json.dump(self.config, config_file, indent=4)
 
     def get_config(self) -> Dict:
         """
@@ -39,6 +43,7 @@ class Config:
             value (Any): The value to set.
         """
         self.config[key] = value
+        self._update_config()
 
 
 class TicketConfig:

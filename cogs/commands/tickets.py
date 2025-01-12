@@ -2,7 +2,9 @@ import nextcord as nc
 from nextcord.ext import commands
 from nextcord.ui import Button, View
 from time import sleep
-from config import TicketConfig as tc
+from config import TicketConfig
+
+tc = TicketConfig()
 
 
 class TicketUtils:

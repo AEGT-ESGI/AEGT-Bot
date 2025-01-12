@@ -1,6 +1,8 @@
 import nextcord as nc
 from nextcord.ext import commands
-from config import TicketConfig as tc
+from config import TicketConfig
+
+tc = TicketConfig()
 
 
 class TicketEventUtils:
@@ -54,7 +56,7 @@ class ManageTicketEvent(commands.Cog):
                 await self.handle_ticket_creation(interaction)
 
     async def handle_ticket_creation(self, interaction: nc.Interaction):
-        category: nc.CategoryChannel = await interaction.guild.fetch_channel(tc.get_ticket_channel())
+        category: nc.CategoryChannel = await interaction.guild.fetch_channel(tc.get_ticket_category())
         ticket_id = TicketEventUtils.generate_ticket_id(interaction.user.id)
 
         channel = await TicketEventUtils.create_ticket_channel(interaction, category, ticket_id)
