@@ -14,6 +14,7 @@ class TicketEventUtils:
     async def create_ticket_channel(
             interaction: nc.Interaction,
             category: nc.CategoryChannel,
+            role: nc.Role,
             ticket_id: int
             ) -> nc.TextChannel:
         return await category.create_text_channel(
@@ -21,8 +22,7 @@ class TicketEventUtils:
                 topic=str(interaction.user.id),
                 overwrites={
                     interaction.guild.default_role: nc.PermissionOverwrite(read_messages=False),
-                    interaction.guild.get_role(tc.get_ticket_role()): nc.PermissionOverwrite(read_messages=True),
-                    interaction.user: nc.PermissionOverwrite(read_messages=True)
+                    role: nc.PermissionOverwrite(read_messages=True)
                     }
                 )
 
@@ -52,17 +52,22 @@ class ManageTicketEvent(commands.Cog):
     @commands.Cog.listener()
     async def on_interaction(self, interaction: nc.Interaction):
         if interaction.type == nc.InteractionType.component:
-            if interaction.data["custom_id"] == "create_ticket":
-                await self.handle_ticket_creation(interaction)
+            if interaction.data["custom_id"].startswith("create_ticket"):
 
-    async def handle_ticket_creation(self, interaction: nc.Interaction):
-        category: nc.CategoryChannel = await interaction.guild.fetch_channel(tc.get_ticket_category())
+                category_id, role_id = interaction.data["custom_id"].split("-")[1:]
+
+                await self.handle_ticket_creation(interaction, category_id, role_id)
+
+    async def handle_ticket_creation(self, interaction: nc.Interaction, category_id: int, role_id: int):
+        category: nc.CategoryChannel = await interaction.guild.fetch_channel(category_id)
+        role: nc.Role = await interaction.guild.fetch_role(role_id)
+
         ticket_id = TicketEventUtils.generate_ticket_id(interaction.user.id)
 
-        channel = await TicketEventUtils.create_ticket_channel(interaction, category, ticket_id)
+        channel = await TicketEventUtils.create_ticket_channel(interaction, category, role, ticket_id)
         embed = TicketEventUtils.create_welcome_embed()
 
-        await interaction.send("Le ticket a été créé ! <:yay:1274376322847739935>", ephemeral=True)
+        await interaction.send("Ta carte étudiante est en cours de vérification, tu recevras tes accès si elle est valide.", ephemeral=True)
         await channel.send(embed=embed)
         await TicketEventUtils.send_and_delete_mention(
                 channel,

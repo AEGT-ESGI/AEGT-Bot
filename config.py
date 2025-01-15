@@ -52,9 +52,7 @@ class TicketConfig:
     """
 
     TICKET_CONFIG_KEY = "TICKETS"
-    TICKET_CONFIG_CHANNEL_ID_KEY = "CHANNEL_ID"
-    TICKET_CONFIG_CATEGORY_ID_KEY = "CATEGORY_ID"
-    TICKET_CONFIG_ROLE_ID_KEY = "ROLE_ID"
+    TICKET_CONFIG_STATUS_KEY = "IS_ACTIVE"
 
     def __init__(self) -> None:
         self.config = Config()
@@ -66,58 +64,23 @@ class TicketConfig:
 
     def _update_ticket_config(self) -> None:
         self.config.set_config(self.TICKET_CONFIG_KEY, self.ticket_config)
+        self._load_ticket_config()
 
-    def get_ticket_channel(self) -> int:
+    def get_ticket_status(self) -> int:
         """
-        Returns the ID channel where ticket system was set up.
+        Returns if ticket system is already set up.
 
         Returns:
-            Int: The ID channel where ticket system was set up.
+            Status (bool): The ticket system status.
         """
-        return self._load_ticket_config()[self.TICKET_CONFIG_CHANNEL_ID_KEY]
+        return self._load_ticket_config()[self.TICKET_CONFIG_STATUS_KEY]
     
-    def get_ticket_category(self) -> int:
+    def set_ticket_status(self, status: bool) -> int:
         """
-        Returns the ID category where tickets will be created.
-
-        Returns:
-            Int: The ID category where tickets will be created.
-        """
-        return self._load_ticket_config()[self.TICKET_CONFIG_CATEGORY_ID_KEY]
-    
-    def get_ticket_role(self) -> int:
-        """
-        Returns the ID ticket role which is added to ticket channel for support.
-
-        Returns:
-            Int: The ID ticket role which is added to ticket channel for support.
-        """
-        return self._load_ticket_config()[self.TICKET_CONFIG_ROLE_ID_KEY]
-
-    def set_ticket_channel(self, channel_id: int) -> None:
-        """
-        Sets the ID for the channel where system ticket will be set up.
-        Args:
-            channel_id (int): The ID of the channel
-        """
-        self.ticket_config[self.TICKET_CONFIG_CHANNEL_ID_KEY] = channel_id
-        self._update_ticket_config()
-
-    def set_ticket_category(self, category_id: int) -> None:
-        """
-        Sets the ID for the category where tickets will be created.
+        Set if ticket system is set up or not.
 
         Args:
-            category_id (int): The ID of the category
+            Status (bool): The ticket system status.
         """
-        self.ticket_config[self.TICKET_CONFIG_CATEGORY_ID_KEY] = category_id
-        self._update_ticket_config()
-
-    def set_ticket_role(self, role_id: int) -> None:
-        """
-        Sets the ID for the role that will be added to the ticket channel for support.
-        Args:
-            role_id (int): The ID of the role
-        """
-        self.ticket_config[self.TICKET_CONFIG_ROLE_ID_KEY] = role_id
+        self.ticket_config[self.TICKET_CONFIG_STATUS_KEY] = status
         self._update_ticket_config()
