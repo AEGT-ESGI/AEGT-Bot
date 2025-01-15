@@ -5,5 +5,26 @@
   },
   "TICKETS": {
     "IS_ACTIVE": false
+  },
+  "LOGS": {
+    "MESSAGE_DELETE": false,
+    "MESSAGE_UPDATE": false,
+    "BAN_ADD": false,
+    "BAN_REMOVE": false,
+    "KICK": false,
+    "MUTE_ADD": false,
+    "MUTE_REMOVE": false,
+    "CHANNEL_CREATE": false,
+    "CHANNEL_DELETE": false,
+    "CHANNEL_UPDATE": false,
+    "GUILD_MEMBER_ADD": false,
+    "GUILD_MEMBER_REMOVE": false,
+    "GUILD_MEMBER_UPDATE": false,
+    "GUILD_ROLE_CREATE": false,
+    "GUILD_ROLE_DELETE": false,
+    "GUILD_ROLE_UPDATE": false,
+    "GUILD_UPDATE": false,
+    "EMOJI_CREATE": false,
+    "EMOJI_DELETE": false
   }
 }
