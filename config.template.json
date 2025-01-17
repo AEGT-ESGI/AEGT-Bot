@@ -7,6 +7,7 @@
     "IS_ACTIVE": false
   },
   "LOGS": {
+    "CHANNEL_ID": 0,
     "MESSAGE_DELETE": false,
     "MESSAGE_UPDATE": false,
     "BAN_ADD": false,

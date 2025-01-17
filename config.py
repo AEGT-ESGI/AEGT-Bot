@@ -66,7 +66,7 @@ class TicketConfig:
         self.config.set_config(self.TICKET_CONFIG_KEY, self.ticket_config)
         self._load_ticket_config()
 
-    def get_ticket_status(self) -> int:
+    def get_ticket_status(self) -> bool:
         """
         Returns if ticket system is already set up.
 
@@ -75,7 +75,7 @@ class TicketConfig:
         """
         return self._load_ticket_config()[self.TICKET_CONFIG_STATUS_KEY]
     
-    def set_ticket_status(self, status: bool) -> int:
+    def set_ticket_status(self, status: bool) -> None:
         """
         Set if ticket system is set up or not.
 
@@ -84,3 +84,53 @@ class TicketConfig:
         """
         self.ticket_config[self.TICKET_CONFIG_STATUS_KEY] = status
         self._update_ticket_config()
+
+class LogConfig:
+    """
+    A class to manage the logs system of the bot.
+    """
+
+    LOGS_CONFIG_KEY = "LOGS"
+    LOGS_CONFIG_CHANNEL_KEY = "CHANNEL_ID"
+
+    def __init__(self) -> None:
+        self.config = Config()
+        self._load_logs_config()
+
+    def _load_logs_config(self) -> Dict:
+        self.logs_config = self.config.get_config()[self.LOGS_CONFIG_KEY]
+        return self.logs_config
+
+    def _update_logs_config(self) -> None:
+        self.config.set_config(self.LOGS_CONFIG_KEY, self.logs_config)
+        self._load_logs_config()
+
+    def get_logs_active(self) -> list[str]:
+        """
+        Returns active scopes.
+
+        Returns:
+            Scopes (list): The active scopes.
+        """
+        active_scopes = [scope for scope, status in self._load_logs_config().items() if status and scope != self.LOGS_CONFIG_CHANNEL_KEY]
+        return active_scopes
+    
+    def get_logs_channel(self) -> int:
+        """
+        Returns the channel ID where logs info will be displayed.
+
+        Returns:
+            Channel ID (int): The channel ID where logs info will be displayed.
+        """
+        return self._load_logs_config()[self.LOGS_CONFIG_CHANNEL_KEY]
+    
+    def set_logs_channel(self, channel_id: int) -> None:
+        """
+        Set the channel where logs info will be displayed.
+
+        Args:
+            Channel ID (int): The channel ID where logs info will be displayed.
+        """
+        self.ticket_config[self.LOGS_CONFIG_CHANNEL_KEY] = channel_id
+        self._update_ticket_config()
+    
