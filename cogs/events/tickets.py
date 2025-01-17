@@ -1,6 +1,7 @@
 import nextcord as nc
 from nextcord.ext import commands
 from config import TicketConfig
+from nextcord.ui import Modal
 
 tc = TicketConfig()
 
@@ -27,21 +28,17 @@ class TicketEventUtils:
                 )
 
     @staticmethod
-    def create_welcome_embed() -> nc.Embed:
-        return nc.Embed(
-                title="Bienvenue à 𝐿'𝛼𝜋𝜏𝜄𝑞𝜇𝜀 ! ☕",
-                description=(
-                    "Merci de répondre aux questions suivantes afin de valider ton arrivée sur le serveur! "
-                    "Un membre du staff te répondra dès que possible. 🐸\n\n"
-                    "🍉 Quel âge as-tu ?\n"
-                    "🍉 Que cherches-tu sur ce serveur?"
-                    ),
+    def create_verification_embed(user: nc.User) -> nc.Embed:
+        embed = nc.Embed(
+                title=f"Vérification de {user}",
+                description="En attente de la carte étudiante...",
                 color=nc.Color.green()
                 )
+        return embed
 
     @staticmethod
-    async def send_and_delete_mention(channel: nc.TextChannel, user_id: int, staff_role_id: int):
-        msg = await channel.send(f"<@{user_id}><@&{staff_role_id}>")
+    async def send_and_delete_mention(channel: nc.TextChannel, staff_role_id: int):
+        msg = await channel.send(f"<@&{staff_role_id}>")
         await msg.delete()
 
 
@@ -56,8 +53,12 @@ class ManageTicketEvent(commands.Cog):
 
                 category_id, role_id = interaction.data["custom_id"].split("-")[1:]
 
+                await self.ask_for_student_card(interaction, interaction.user)
                 await self.handle_ticket_creation(interaction, category_id, role_id)
 
+    async def ask_for_student_card(self, interaction: nc.Interaction, user: nc.User):
+        pass
+    
     async def handle_ticket_creation(self, interaction: nc.Interaction, category_id: int, role_id: int):
         category: nc.CategoryChannel = await interaction.guild.fetch_channel(category_id)
         role: nc.Role = await interaction.guild.fetch_role(role_id)
@@ -65,16 +66,13 @@ class ManageTicketEvent(commands.Cog):
         ticket_id = TicketEventUtils.generate_ticket_id(interaction.user.id)
 
         channel = await TicketEventUtils.create_ticket_channel(interaction, category, role, ticket_id)
-        embed = TicketEventUtils.create_welcome_embed()
+        embed = TicketEventUtils.create_verification_embed(interaction.user)
 
-        await interaction.send("Ta carte étudiante est en cours de vérification, tu recevras tes accès si elle est valide.", ephemeral=True)
         await channel.send(embed=embed)
         await TicketEventUtils.send_and_delete_mention(
                 channel,
-                interaction.user.id,
-                tc.get_ticket_role()
+                role_id
                 )
-
 
 def setup(bot):
     bot.add_cog(ManageTicketEvent(bot))
