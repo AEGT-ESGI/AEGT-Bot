@@ -2,9 +2,10 @@ import nextcord as nc
 from nextcord.ext import commands
 from nextcord.ui import Button, View
 from time import sleep
-from config import TicketConfig
+from config import TicketConfig, SchoolConfig
 
 tc = TicketConfig()
+sc = SchoolConfig()
 
 
 class TicketUtils:
@@ -39,7 +40,7 @@ class TicketUtils:
 
     @staticmethod
     async def setup_new_ticket_system(interaction: nc.Interaction, ticket_category: nc.CategoryChannel, support_role: nc.Role):
-        tc.set_ticket_status(True)
+        tc.set_ticket_category(ticket_category.id)
 
         await interaction.send(
                 "Le système de tickets a été configuré !"
@@ -53,7 +54,7 @@ class TicketUtils:
     @staticmethod
     async def allow_ticket_creation(interaction: nc.Interaction, ticket_category: nc.CategoryChannel, support_role: nc.Role):
         if interaction.data["custom_id"] == "delete_ticket":
-            tc.set_ticket_status(True)
+            tc.set_ticket_category(ticket_category.id)
 
             await interaction.message.edit(
                     "Le système de tickets a été configuré !",
@@ -116,10 +117,44 @@ class ManageTicketCommand(commands.Cog):
                     )
             return
 
-        if tc.get_ticket_status():
+        if tc.get_ticket_category():
             await TicketUtils.handle_existing_ticket_system(interaction, ticket_category, support_role)
         else:
             await TicketUtils.setup_new_ticket_system(interaction, ticket_category, support_role)
+
+    @nc.slash_command(description="Accepter une carte étudiante.")
+    async def accepter_etudiant(
+        self,
+        interaction: nc.Interaction,
+        ecole: str = nc.SlashOption(
+            description="Le nom de l'école de l'étudiant.",
+            required=True,
+            choices=sc.get_all_schools().keys()
+            )
+    ):
+        if interaction.channel.category_id == tc.get_ticket_category():
+
+            user = await interaction.guild.fetch_member(int(interaction.channel.topic))
+
+            if not sc.get_school(ecole):
+                await interaction.send("L'école n'a pas été configurée.")
+                return
+            
+            role = await interaction.guild.fetch_role(sc.get_school(ecole))
+
+            await user.add_roles(role)
+
+            await interaction.send("Etudiant accepté !\n-# Ce channel sera supprimé dans 5 secondes.")
+
+            try:
+                user.send("Votre statut étudiant a été accepté !")
+            except nc.Forbidden:
+                pass
+
+            sleep(5)
+
+            await interaction.channel.delete()
+
 
 
 def setup(bot):

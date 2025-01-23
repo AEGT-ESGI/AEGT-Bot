@@ -4,7 +4,18 @@
     "VERSION": "1.0"
   },
   "TICKETS": {
-    "IS_ACTIVE": false
+    "CATEGORY": false
+  },
+  "SCHOOLS": {
+    "ESGI": 0,
+    "PPA": 0,
+    "PPA Sport": 0,
+    "EFAB": 0,
+    "Efet Studio Crea": 0,
+    "EDBS": 0,
+    "Ecole W": 0,
+    "Maestris BTS": 0,
+    "ISA": 0
   },
   "LOGS": {
     "CHANNEL_ID": 0,
