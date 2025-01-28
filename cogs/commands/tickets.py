@@ -147,7 +147,7 @@ class ManageTicketCommand(commands.Cog):
             await interaction.send("Etudiant accepté !\n-# Ce channel sera supprimé dans 5 secondes.")
 
             try:
-                user.send("Votre statut étudiant a été accepté !")
+                await user.send("Votre statut étudiant a été accepté !")
             except nc.Forbidden:
                 pass
 

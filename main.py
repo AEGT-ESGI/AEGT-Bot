@@ -23,15 +23,17 @@ class Bot:
         config_instance = config.Config()
         self.config = config_instance.get_config()
 
-    def load_commands(self):
-        for command in os.listdir("cogs/commands"):
-            if command.endswith(".py"):
-                self.cogs.append("cogs.commands." + command[:-3])
-
     def load_events(self):
         for event in os.listdir("cogs/events"):
             if event.endswith(".py"):
                 self.cogs.append("cogs.events." + event[:-3])
+                print("Loaded event: " + event)
+
+    def load_commands(self):
+        for command in os.listdir("cogs/commands"):
+            if command.endswith(".py"):
+                self.cogs.append("cogs.commands." + command[:-3])
+                print("Loaded command: " + command)
 
     def load(self):
         self.load_events()
